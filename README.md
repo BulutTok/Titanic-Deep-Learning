@@ -1,6 +1,6 @@
 # Titanic Survival Prediction 
 
-*A hands‑on demonstration of an end‑to‑end deep‑learning pipeline with the classic Titanic dataset.*
+*A hands‑on demonstration of an end‑to‑end deep‑learning pipeline built on the classic Titanic dataset (891 labelled passengers for training, 418 unlabeled for testing; 11 raw features including Age, Sex, Pclass, Fare, SibSp, Parch, and Embarked, with the binary target Survived).
 
 ---
 
@@ -47,7 +47,7 @@ The notebook is **fully self‑contained**: the first code cell downloads the Ka
 | `tensorflow`   | ≥ 2.16         |
 | `jupyterlab`   | ≥ 4.2          |
 
-*Tip:* if you are new to Deep Learning and want a smaller install, swap `tensorflow` for `tensorflow‑cpu`.
+*Tip:* if you want a smaller install, swap `tensorflow` for `tensorflow‑cpu`.
 
 ---
 
@@ -65,7 +65,6 @@ The notebook is **fully self‑contained**: the first code cell downloads the Ka
 4. **Training & validation** – 20 % hold‑out split.
 5. **Evaluation** – Confusion matrix & `classification_report` (precision / recall / F1).
 
-Feel free to tweak the architecture or replace it with gradient‑boosting, random forests, etc.—the preprocessing pipeline stays valid.
 
 ---
 
@@ -92,23 +91,17 @@ val_accuracy: 0.7933    val_loss: 0.4359
   * *Survived (1)* – precision 0.833, recall 0.580, F1 0.684
   * Macro‑average F1 0.765
 
-### Most informative features
 
-`Sex_female`, `Pclass_3`, `Fare`, `Age`, `Embarked_S`
-*(see the notebook’s final section for permutation‑importance & coefficient plots)*
-
----
 
 
 
 ##  Contributing
 
-1. Fork the repo & create your feature branch (`git checkout -b feat/amazing-idea`)
-2. Commit your changes (`git commit -m 'Add amazing idea'`)
-3. Push to the branch (`git push origin feat/amazing-idea`)
+1. Fork the repo & create your feature branch (`git checkout -b `)
+2. Commit your changes (`git commit -m `)
+3. Push to the branch (`git push origin `)
 4. Open a pull request
 
-Please follow [**PEP 8**](https://peps.python.org/pep-0008/) and include unit tests where reasonable.
 
 ---
 
