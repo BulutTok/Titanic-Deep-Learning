@@ -1,3 +1,4 @@
+README.md linguist-language=Text
 # Titanic Survival Prediction 
 
 
