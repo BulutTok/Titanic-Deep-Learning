@@ -8,13 +8,12 @@ This repository provides a complete example of downloading the Titanic dataset, 
 ## Table of Contents
 
 1. [Project Overview](#project-overview)  
-2. [Directory Structure](#directory-structure)  
-3. [Installation](#installation)  
-4. [Usage](#usage)  
-5. [Preprocessing Pipeline](#preprocessing-pipeline)  
-6. [Model Architecture](#model-architecture)  
-7. [Results](#results)  
-8. [License & Contact](#license--contact)  
+2. [Directory Structure](#directory-structure)    
+3. [Usage](#usage)  
+4. [Preprocessing Pipeline](#preprocessing-pipeline)  
+5. [Model Architecture](#model-architecture)  
+6. [Results](#results)  
+7. [License & Contact](#license--contact)  
 
 ---
 
@@ -41,29 +40,7 @@ We fetch the official Titanic `train.csv` and `test.csv` files, build a preproce
 
 ---
 
-## Installation
 
-1. **Clone this repository**
-   
-   ```bash
-   git clone https://github.com/<your-username>/titanic-survival-prediction.git
-   cd titanic-survival-prediction
-````
-
-2. **Create & activate a virtual environment (optional, but recommended)**
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # on Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
----
 
 ## Usage
 
