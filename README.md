@@ -45,7 +45,7 @@ titanic-survival-prediction/
 ├── requirements.txt
 │── train.csv
 │── test.csv
-└── tTitanic_Survival_Prediction_.ipynb    # Main script containing all code
+└── Titanic_Survival_Prediction_.ipynb    # Main script containing all code
 ```
 
 ---
