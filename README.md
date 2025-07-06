@@ -1,6 +1,6 @@
 # Titanic Survival Prediction 
 
-```markdown
+
 
 
 This repository provides a complete example of downloading the Titanic dataset, preprocessing the data with scikit-learn pipelines, training a simple neural network in TensorFlow/Keras, and evaluating its performance.
