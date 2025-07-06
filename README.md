@@ -1,117 +1,134 @@
-# Titanic Deep Learning
+# Titanic Survival Prediction 
 
-This repository contains a Python project that leverages deep learning techniques to predict the survival of Titanic passengers. Using TensorFlow and Keras, the project preprocesses the data, builds a simple neural network model, and generates predictions formatted for Kaggle submission.
+*A hands‑on demonstration of an end‑to‑end deep‑learning pipeline with the classic Titanic dataset.*
 
-## Overview
+---
 
-The objective is to predict whether a Titanic passenger survived based on features such as age, sex, passenger class, number of siblings/spouses aboard, fare paid, and more. The dataset is split into a training set (with survival labels) and a test set (without labels). The predictions from the deep learning model are written to a CSV file for submission to Kaggle.
+## Repository Contents
 
-## Data
+| Path                                 | Description                                                                                                                                                                                                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Titanic_Survival_Prediction_.ipynb` | Jupyter notebook that downloads the raw data, performs feature engineering & preprocessing with **scikit‑learn** pipelines, trains a small **TensorFlow/Keras** neural‑network classifier, and evaluates it with accuracy, confusion‑matrix & classification‑report. |
+| `datasets/`                          | Created automatically at first run; stores the CSV files fetched from the original dataset source.                                                                                                                                                                   |
+| `environment.yml` *(optional)*       | Conda environment file you can create with `conda env export > environment.yml` once the project runs on your machine.                                                                                                                                               |
 
-The project automatically downloads the Titanic dataset from:
+---
+
+##  Quick Start
+
+```bash
+# 1️⃣  Clone the repo
+git clone https://github.com/<your-user>/titanic-survival-prediction.git
+cd titanic-survival-prediction
+
+# 2️⃣  (Recommended) create an isolated environment
+conda create -n titanic python=3.11
+conda activate titanic
+
+# 3️⃣  Install requirements
+pip install -r requirements.txt        # or see the list below
+
+# 4️⃣  Launch the notebook
+jupyter lab Titanic_Survival_Prediction_.ipynb
 ```
-https://raw.githubusercontent.com/ageron/handson-ml2/master/datasets/titanic/
+
+The notebook is **fully self‑contained**: the first code cell downloads the Kaggle‑style CSVs directly from Aurélien Géron’s public repository, so no manual data download is needed.
+
+---
+
+##  Requirements
+
+| Package        | Tested Version |
+| -------------- | -------------- |
+| `python`       | ≥ 3.10         |
+| `pandas`       | ≥ 2.2          |
+| `numpy`        | ≥ 1.26         |
+| `scikit‑learn` | ≥ 1.4          |
+| `tensorflow`   | ≥ 2.16         |
+| `jupyterlab`   | ≥ 4.2          |
+
+*Tip:* if you are new to Deep Learning and want a smaller install, swap `tensorflow` for `tensorflow‑cpu`.
+
+---
+
+## Workflow Highlights
+
+1. **Data loading** – CSVs are read into Pandas DataFrames; `PassengerId` is set as index.
+2. **Pre‑processing pipeline**
+
+   * Numerical columns ⟶ `SimpleImputer(strategy="median")`
+   * Categorical columns ⟶ `SimpleImputer(strategy="most_frequent") → OneHotEncoder(handle_unknown="ignore")`
+   * `ColumnTransformer` stitches everything together.
+3. **Model** – Sequential Keras NN
+
+   * `Input` layer → dense‑ReLU → dense‑ReLU → sigmoid output.
+4. **Training & validation** – 20 % hold‑out split.
+5. **Evaluation** – Confusion matrix & `classification_report` (precision / recall / F1).
+
+Feel free to tweak the architecture or replace it with gradient‑boosting, random forests, etc.—the preprocessing pipeline stays valid.
+
+---
+
+## 📊 Results
+
+### Training run snapshot (40 epochs)
+
 ```
-The following CSV files are used:
-- **train.csv**: Contains training data with labels (Survived column).
-- **test.csv**: Contains test data without labels.
+accuracy:      0.8469    loss: 0.3748
+val_accuracy: 0.7933    val_loss: 0.4359
+```
 
-**Key Attributes:**
-- **PassengerId**: Unique identifier for each passenger.
-- **Survived**: Survival outcome (0 = did not survive, 1 = survived).
-- **Pclass**: Passenger class.
-- **Name**, **Sex**, **Age**: Passenger details.
-- **SibSp**: Number of siblings/spouses aboard.
-- **Parch**: Number of parents/children aboard.
-- **Ticket**: Ticket number.
-- **Fare**: Ticket fare (in pounds).
-- **Cabin**: Cabin number.
-- **Embarked**: Port of embarkation.
+### Validation‑set performance (179 passengers)
 
-## Project Workflow
+|              | **Predicted 0** | **Predicted 1** |
+| ------------ | --------------: | --------------: |
+| **Actual 0** |         **102** |               8 |
+| **Actual 1** |              29 |          **40** |
 
-1. **Data Fetching:**
-   - The script downloads the dataset if it’s not already available in the `datasets/titanic` directory.
+* **Overall accuracy:** **79.3 %**
+* **Class metrics**
 
-2. **Data Loading:**
-   - The CSV files are loaded into Pandas DataFrames.
-   - The `PassengerId` column is set as the index for both training and test datasets.
+  * *Did not survive (0)* – precision 0.779, recall 0.927, F1 0.846
+  * *Survived (1)* – precision 0.833, recall 0.580, F1 0.684
+  * Macro‑average F1 0.765
 
-3. **Preprocessing:**
-   - **Numerical Pipeline:**
-     - Attributes: `Age`, `SibSp`, `Parch`, `Fare`
-     - Steps: Impute missing values using the median and scale the features.
-   - **Categorical Pipeline:**
-     - Attributes: `Pclass`, `Sex`, `Embarked`
-     - Steps: Impute missing values using the most frequent value and apply one-hot encoding.
-   - The numerical and categorical pipelines are combined using a `ColumnTransformer`.
+### Most informative features
 
-4. **Deep Learning Model:**
-   - A simple neural network is built using TensorFlow’s Keras API:
-     - **Layer 1:** Dense layer with 100 neurons and ReLU activation.
-     - **Output Layer:** Dense layer with 1 neuron and sigmoid activation.
-   - The model uses binary crossentropy as the loss function, the Adam optimizer, and tracks accuracy.
-   - The model is trained for 40 epochs on the preprocessed training data.
+`Sex_female`, `Pclass_3`, `Fare`, `Age`, `Embarked_S`
+*(see the notebook’s final section for permutation‑importance & coefficient plots)*
 
-5. **Prediction and Submission:**
-   - The model predicts survival probabilities for the test set.
-   - Predictions are converted to binary outcomes (1 if probability ≥ 0.5, else 0).
-   - The results are saved in a CSV file named `submission_dl.csv`, containing `PassengerId` and `Survived` columns.
+---
 
-## Requirements
 
-- **Python 3.x**
-- **Pandas**
-- **Scikit-learn**
-- **TensorFlow** (includes Keras)
-- **Urllib** (standard library)
 
-## Installation
+##  Contributing
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/yourusername/titanic-deep-learning.git
-   cd titanic-deep-learning
-   ```
+1. Fork the repo & create your feature branch (`git checkout -b feat/amazing-idea`)
+2. Commit your changes (`git commit -m 'Add amazing idea'`)
+3. Push to the branch (`git push origin feat/amazing-idea`)
+4. Open a pull request
 
-2. **Install the Required Packages:**
-   ```bash
-   pip install pandas scikit-learn tensorflow
-   ```
+Please follow [**PEP 8**](https://peps.python.org/pep-0008/) and include unit tests where reasonable.
 
-3. **Run the Script:**
-   - You can run the script directly from the command line:
-     ```bash
-     python titanic_deep_learning.py
-     ```
-   - Alternatively, you can execute the code in a Jupyter Notebook or Google Colab environment.
+---
 
-## Usage
+##  License
 
-- **Data Download:**  
-  The script automatically downloads `train.csv` and `test.csv` into the `datasets/titanic` folder if they are not already present.
+Distributed under the **MIT License**.
+See `LICENSE` file for more information.
 
-- **Preprocessing and Training:**  
-  The preprocessing pipelines transform numerical and categorical attributes. The deep learning model is then trained using the processed training data.
+---
 
-- **Prediction:**  
-  After training, the model predicts survival outcomes on the test set. These predictions are converted into binary values and saved in `submission_dl.csv`.
+### ✨ Acknowledgements
 
-## Results
+* Dataset originated from the **[Kaggle Titanic Challenge](https://www.kaggle.com/competitions/titanic)**.
+* Download script points to the mirror hosted in the companion repo of *Hands‑On Machine Learning with Scikit‑Learn, Keras & TensorFlow* by **Aurélien Géron**.
 
-- The model’s architecture is summarized after training.
-- A CSV file (`submission_dl.csv`) is generated, which contains the final predictions for submission to Kaggle. This file includes:
-  - `PassengerId`
-  - `Survived` (predicted outcome)
 
 ## Contact
 
 For questions, suggestions, or contributions, please contact:
 
 **Bulut Tok**  
-Email: [buluttok2013@gmail.com](mailto:buluttok2013@gmail.com)
+Email: [buluttok2013@gmail.com]
 
-
-###Acknowledgments
-Thanks to Ageron for providing the initial datasets.
-Kaggle for the Titanic machine learning competition platform.
