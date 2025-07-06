@@ -118,6 +118,7 @@ Trained for 40 epochs with batch size 32, tracking validation performance each e
 
      accuracy                          0.793       179
     macro avg      0.806     0.753     0.765       179
+  weighted avg      0.800     0.793     0.784       179
   ```
 
 weighted avg      0.800     0.793     0.784       179
@@ -128,15 +129,15 @@ weighted avg      0.800     0.793     0.784       179
 
 
 
-##  License
+## License
 
----
+
 Distributed under the **MIT License**.
 See `LICENSE` file for more information.
 
 ---
 
-### ✨ Acknowledgements
+###  Acknowledgements
 
 * Dataset originated from the **[Kaggle Titanic Challenge](https://www.kaggle.com/competitions/titanic)**.
 * Download script points to the mirror hosted in the companion repo of *Hands‑On Machine Learning with Scikit‑Learn, Keras & TensorFlow* by **Aurélien Géron**.
