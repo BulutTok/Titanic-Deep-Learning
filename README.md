@@ -1,109 +1,154 @@
 # Titanic Survival Prediction 
 
-*A hands‑on demonstration of an end‑to‑end deep‑learning pipeline built on the classic Titanic dataset (891 labelled passengers for training, 418 unlabeled for testing; 11 raw features including Age, Sex, Pclass, Fare, SibSp, Parch, and Embarked, with the binary target Survived).
+```markdown
+
+
+This repository provides a complete example of downloading the Titanic dataset, preprocessing the data with scikit-learn pipelines, training a simple neural network in TensorFlow/Keras, and evaluating its performance.
+
+## Table of Contents
+
+1. [Project Overview](#project-overview)  
+2. [Directory Structure](#directory-structure)  
+3. [Installation](#installation)  
+4. [Usage](#usage)  
+5. [Preprocessing Pipeline](#preprocessing-pipeline)  
+6. [Model Architecture](#model-architecture)  
+7. [Results](#results)  
+8. [License & Contact](#license--contact)  
 
 ---
 
-## Repository Contents
+## Project Overview
 
-| Path                                 | Description                                                                                                                                                                                                                                                          |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Titanic_Survival_Prediction_.ipynb` | Jupyter notebook that downloads the raw data, performs feature engineering & preprocessing with **scikit‑learn** pipelines, trains a small **TensorFlow/Keras** neural‑network classifier, and evaluates it with accuracy, confusion‑matrix & classification‑report. |
-| `datasets/`                          | Created automatically at first run; stores the CSV files fetched from the original dataset source.                                                                                                                                                                   |
-| `environment.yml` *(optional)*       | Conda environment file you can create with `conda env export > environment.yml` once the project runs on your machine.                                                                                                                                               |
+We fetch the official Titanic `train.csv` and `test.csv` files, build a preprocessing pipeline that imputes missing values and one-hot encodes categorical features, train a small feed-forward neural network to predict survival, and report accuracy, confusion matrix, and classification metrics.
 
 ---
 
-##  Quick Start
+## Directory Structure
 
-```bash
-# 1️⃣  Clone the repo
-git clone https://github.com/<your-user>/titanic-survival-prediction.git
-cd titanic-survival-prediction
-
-# 2️⃣  (Recommended) create an isolated environment
-conda create -n titanic python=3.11
-conda activate titanic
-
-# 3️⃣  Install requirements
-pip install -r requirements.txt        # or see the list below
-
-# 4️⃣  Launch the notebook
-jupyter lab Titanic_Survival_Prediction_.ipynb
 ```
 
-The notebook is **fully self‑contained**: the first code cell downloads the Kaggle‑style CSVs directly from Aurélien Géron’s public repository, so no manual data download is needed.
+.
+├── README.md
+├── requirements.txt
+├── datasets/
+│   └── titanic/
+│       ├── train.csv
+│       └── test.csv
+└── titanic\_pipeline.py         # Main script/notebook with all code
+
+````
 
 ---
 
-##  Requirements
+## Installation
 
-| Package        | Tested Version |
-| -------------- | -------------- |
-| `python`       | ≥ 3.10         |
-| `pandas`       | ≥ 2.2          |
-| `numpy`        | ≥ 1.26         |
-| `scikit‑learn` | ≥ 1.4          |
-| `tensorflow`   | ≥ 2.16         |
-| `jupyterlab`   | ≥ 4.2          |
+1. **Clone this repository**  
+   ```bash
+   git clone https://github.com/<your-username>/titanic-survival-prediction.git
+   cd titanic-survival-prediction
+````
 
-*Tip:* if you want a smaller install, swap `tensorflow` for `tensorflow‑cpu`.
+2. **Create & activate a virtual environment (optional, but recommended)**
 
----
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # on Windows: venv\Scripts\activate
+   ```
 
-## Workflow Highlights
+3. **Install dependencies**
 
-1. **Data loading** – CSVs are read into Pandas DataFrames; `PassengerId` is set as index.
-2. **Pre‑processing pipeline**
-
-   * Numerical columns ⟶ `SimpleImputer(strategy="median")`
-   * Categorical columns ⟶ `SimpleImputer(strategy="most_frequent") → OneHotEncoder(handle_unknown="ignore")`
-   * `ColumnTransformer` stitches everything together.
-3. **Model** – Sequential Keras NN
-
-   * `Input` layer → dense‑ReLU → dense‑ReLU → sigmoid output.
-4. **Training & validation** – 20 % hold‑out split.
-5. **Evaluation** – Confusion matrix & `classification_report` (precision / recall / F1).
-
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ---
 
-## 📊 Results
+## Usage
 
-### Training run snapshot (40 epochs)
+1. **Fetch the data**
+   The script will automatically download `train.csv` and `test.csv` into `datasets/titanic/` if they are not already present.
+
+   ```bash
+   python titanic_pipeline.py
+   ```
+
+2. **Run the notebook or script**
+   This will:
+
+   * Load and preprocess the data
+   * Split off a validation set (20%)
+   * Train a simple neural network for 40 epochs
+   * Print validation accuracy, confusion matrix, and a classification report
+
+---
+
+## Preprocessing Pipeline
+
+* **Numerical features** (`Age`, `SibSp`, `Parch`, `Fare`):
+  – Impute missing values with the median
+  – Standardize to zero mean & unit variance
+
+* **Categorical features** (`Pclass`, `Sex`, `Embarked`):
+  – Impute missing values with the most frequent category
+  – One-hot encode (no sparse output)
+
+Combined via `sklearn.compose.ColumnTransformer` into a single feature matrix.
+
+---
+
+## Model Architecture
+
+A simple TensorFlow/Keras `Sequential` model:
+
+```python
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Input, Dense
+
+model = Sequential([
+    Input(shape=(n_features,)),
+    Dense(100, activation='relu'),
+    Dense(1, activation='sigmoid')
+])
+model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+)
+```
+
+Trained for 40 epochs with batch size 32, tracking validation performance each epoch.
+
+---
+
+## Results
+
+* **Validation accuracy:** \~0.7933
+* **Confusion matrix:**
+
+  ```
+  [[102   8]
+   [ 29  40]]
+  ```
+* **Classification report:**
+
+  ```
+                precision    recall  f1-score   support
+
+           0      0.779     0.927     0.846       110
+           1      0.833     0.580     0.684        69
+
+     accuracy                          0.793       179
+    macro avg      0.806     0.753     0.765       179
+  ```
+
+weighted avg      0.800     0.793     0.784       179
 
 ```
-accuracy:      0.8469    loss: 0.3748
-val_accuracy: 0.7933    val_loss: 0.4359
-```
-
-### Validation‑set performance (179 passengers)
-
-|              | **Predicted 0** | **Predicted 1** |
-| ------------ | --------------: | --------------: |
-| **Actual 0** |         **102** |               8 |
-| **Actual 1** |              29 |          **40** |
-
-* **Overall accuracy:** **79.3 %**
-* **Class metrics**
-
-  * *Did not survive (0)* – precision 0.779, recall 0.927, F1 0.846
-  * *Survived (1)* – precision 0.833, recall 0.580, F1 0.684
-  * Macro‑average F1 0.765
-
-
-
-
-
-##  Contributing
-
-1. Fork the repo & create your feature branch (`git checkout -b `)
-2. Commit your changes (`git commit -m `)
-3. Push to the branch (`git push origin `)
-4. Open a pull request
-
 
 ---
+
+
 
 ##  License
 
