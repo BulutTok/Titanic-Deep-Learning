@@ -43,7 +43,8 @@ We fetch the official Titanic `train.csv` and `test.csv` files, build a preproce
 
 ## Installation
 
-1. **Clone this repository**  
+1. **Clone this repository**
+   
    ```bash
    git clone https://github.com/<your-username>/titanic-survival-prediction.git
    cd titanic-survival-prediction
