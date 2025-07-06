@@ -130,6 +130,7 @@ weighted avg      0.800     0.793     0.784       179
 
 ##  License
 
+---
 Distributed under the **MIT License**.
 See `LICENSE` file for more information.
 
